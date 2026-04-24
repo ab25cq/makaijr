@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="jp.makai.conquestidle"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="24"
+        android:targetSdkVersion="34" />
+
+    <application
+        android:allowBackup="true"
+        android:debuggable="true"
+        android:extractNativeLibs="false"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+        <activity android:name="jp.makai.conquestidle.MissionActivity" />
+        <activity android:name="jp.makai.conquestidle.TimeSelectActivity" />
+        <activity android:name="jp.makai.conquestidle.VillageSelectActivity" />
+        <activity android:name="jp.makai.conquestidle.MonsterSelectActivity" />
+        <activity
+            android:name="jp.makai.conquestidle.TitleActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

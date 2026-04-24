@@ -1,0 +1,34 @@
+R_DEF: Internal format may change without notice
+local
+drawable bg_screen
+drawable button_primary
+drawable button_secondary
+drawable panel_card
+drawable panel_inner
+drawable progress_mission
+id battleLog
+id choiceDescription
+id choiceGroup
+id choiceSaveButton
+id choiceSubtitle
+id choiceTitle
+id conquestSummary
+id missionHeader
+id missionProgress
+id missionResult
+id monsterHpValue
+id openMonsterButton
+id openTimeButton
+id openVillageButton
+id returnButton
+id selectedMonsterValue
+id selectedTimeValue
+id selectedVillageValue
+id sortieButton
+id timeValue
+id villageHpValue
+layout activity_choice
+layout activity_mission
+layout activity_title
+string app_name
+style AppTheme

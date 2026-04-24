@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">魔界遠征</string>
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#130A12</item>
+        <item name="android:navigationBarColor">#130A12</item>
+        <item name="android:windowBackground">#130A12</item>
+    </style>
+</resources>

@@ -1,0 +1,7 @@
+com.makaijr.app-pngs-0 /home/ab25cq/makaijr/app/build/generated/res/pngs/release
+com.makaijr.app-resValues-1 /home/ab25cq/makaijr/app/build/generated/res/resValues/release
+com.makaijr.app-packageReleaseResources-2 /home/ab25cq/makaijr/app/build/intermediates/incremental/release/packageReleaseResources/merged.dir
+com.makaijr.app-packageReleaseResources-3 /home/ab25cq/makaijr/app/build/intermediates/incremental/release/packageReleaseResources/stripped.dir
+com.makaijr.app-release-4 /home/ab25cq/makaijr/app/build/intermediates/merged_res/release/mergeReleaseResources
+com.makaijr.app-main-5 /home/ab25cq/makaijr/app/src/main/res
+com.makaijr.app-release-6 /home/ab25cq/makaijr/app/src/release/res

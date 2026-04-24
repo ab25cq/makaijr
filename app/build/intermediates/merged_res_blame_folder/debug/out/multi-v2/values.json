@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "jp.makai.conquestidle.app-mergeDebugResources-2:/values/values.xml",
+            "map": [
+                {
+                    "source": "/home/ab25cq/makai/app/src/main/res/values/strings.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "41",
+                        "endOffsets": "92"
+                    }
+                },
+                {
+                    "source": "/home/ab25cq/makai/app/src/main/res/values/styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "331"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "97",
+                        "endLines": "7",
+                        "endColumns": "12",
+                        "endOffsets": "373"
+                    }
+                }
+            ]
+        }
+    ]
+}

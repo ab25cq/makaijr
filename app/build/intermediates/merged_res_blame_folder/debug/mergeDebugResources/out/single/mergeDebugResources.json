@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "com.makaijr.app-debug-4:/drawable_bg_screen.xml.flat",
+        "source": "com.makaijr.app-main-6:/drawable/bg_screen.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/drawable_panel_card.xml.flat",
+        "source": "com.makaijr.app-main-6:/drawable/panel_card.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/drawable_ic_launcher.png.flat",
+        "source": "com.makaijr.app-main-6:/drawable/ic_launcher.png"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/drawable_button_secondary.xml.flat",
+        "source": "com.makaijr.app-main-6:/drawable/button_secondary.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/drawable_panel_inner.xml.flat",
+        "source": "com.makaijr.app-main-6:/drawable/panel_inner.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/layout_activity_choice.xml.flat",
+        "source": "com.makaijr.app-main-6:/layout/activity_choice.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/drawable_button_primary.xml.flat",
+        "source": "com.makaijr.app-main-6:/drawable/button_primary.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/drawable_progress_mission.xml.flat",
+        "source": "com.makaijr.app-main-6:/drawable/progress_mission.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/layout_activity_monster_select.xml.flat",
+        "source": "com.makaijr.app-main-6:/layout/activity_monster_select.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/layout_activity_mission.xml.flat",
+        "source": "com.makaijr.app-main-6:/layout/activity_mission.xml"
+    },
+    {
+        "merged": "com.makaijr.app-debug-4:/layout_activity_title.xml.flat",
+        "source": "com.makaijr.app-main-6:/layout/activity_title.xml"
+    }
+]

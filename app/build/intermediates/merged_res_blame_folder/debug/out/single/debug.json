@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/drawable_button_primary.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/drawable/button_primary.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/drawable_panel_card.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/drawable/panel_card.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/layout_activity_choice.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/layout/activity_choice.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/drawable_bg_screen.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/drawable/bg_screen.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/layout_activity_mission.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/layout/activity_mission.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/drawable_button_secondary.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/drawable/button_secondary.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/drawable_panel_inner.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/drawable/panel_inner.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/layout_activity_title.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/layout/activity_title.xml"
+    },
+    {
+        "merged": "jp.makai.conquestidle.app-merged_res-4:/drawable_progress_mission.xml.flat",
+        "source": "jp.makai.conquestidle.app-main-6:/drawable/progress_mission.xml"
+    }
+]
