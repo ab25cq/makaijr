@@ -8,5 +8,5 @@ https://play.google.com/apps/testing/com.makaijr
 
 https://play.google.com/apps/internaltest/4701065287052453454
 
-makaijr@googlegroups.com
+https://groups.google.com/g/mycallender
 
