@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">makaijr</string>
+    <string name="app_name">Demon Lord</string>
+    <string name="title_header">Demon Lord Command</string>
+    <string name="title_subtitle">An idle conquest game where you dispatch units and slowly take over human villages.</string>
+    <string name="current_party">Current Party</string>
+    <string name="demon_lord">Demon Lord</string>
+    <string name="deployed_monsters">Deployed Units</string>
+    <string name="choose_monsters">Choose Units</string>
+    <string name="target_village">Target Village</string>
+    <string name="choose_village">Choose Village</string>
+    <string name="mission_duration">Mission Duration</string>
+    <string name="choose_time">Choose Time</string>
+    <string name="sortie">Deploy</string>
+    <string name="save_data">Save Data</string>
+    <string name="idle_status">No action yet</string>
+    <string name="export_save">Export to File</string>
+    <string name="import_save">Import from File</string>
+    <string name="reset_all">Reset Everything</string>
+    <string name="conquest_status">Conquest Status</string>
+    <string name="confirm_and_return">Confirm and Return</string>
+    <string name="monster_select_title">Select Units</string>
+    <string name="battle_log">Battle Log</string>
+    <string name="return_to_command">Return to Command</string>
 </resources>

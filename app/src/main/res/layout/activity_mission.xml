@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="戦況ログ"
+                android:text="@string/battle_log"
                 android:textColor="#FFCFB4"
                 android:textStyle="bold" />
 
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_primary"
-                android:text="司令部へ戻る"
+                android:text="@string/return_to_command"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
         </LinearLayout>

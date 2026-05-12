@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_primary"
-                android:text="決定して戻る"
+                android:text="@string/confirm_and_return"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -24,16 +24,16 @@
         "source": "com.makaijr.app-main-5:/drawable/panel_inner.xml"
     },
     {
+        "merged": "com.makaijr.app-release-4:/layout_activity_mission.xml.flat",
+        "source": "com.makaijr.app-main-5:/layout/activity_mission.xml"
+    },
+    {
         "merged": "com.makaijr.app-release-4:/drawable_button_secondary.xml.flat",
         "source": "com.makaijr.app-main-5:/drawable/button_secondary.xml"
     },
     {
         "merged": "com.makaijr.app-release-4:/layout_activity_title.xml.flat",
         "source": "com.makaijr.app-main-5:/layout/activity_title.xml"
-    },
-    {
-        "merged": "com.makaijr.app-release-4:/layout_activity_mission.xml.flat",
-        "source": "com.makaijr.app-main-5:/layout/activity_mission.xml"
     },
     {
         "merged": "com.makaijr.app-release-4:/drawable_button_primary.xml.flat",

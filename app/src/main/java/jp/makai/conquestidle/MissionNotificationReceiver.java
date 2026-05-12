@@ -39,10 +39,10 @@ public final class MissionNotificationReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "遠征完了通知",
+                    GameText.text("Mission complete notifications", "遠征完了通知"),
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("出撃が完了した時に通知する。");
+            channel.setDescription(GameText.text("Notifies when a mission is complete.", "出撃が完了した時に通知する。"));
             notificationManager.createNotificationChannel(channel);
         }
 
@@ -60,7 +60,7 @@ public final class MissionNotificationReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notification = new Notification.Builder(context, CHANNEL_ID)
                     .setContentTitle(title)
-                    .setContentText("司令部へ戻って戦果を確認する。")
+                    .setContentText(GameText.text("Return to command to review the report.", "司令部へ戻って戦果を確認する。"))
                     .setStyle(new Notification.BigTextStyle().bigText(pendingReport))
                     .setSmallIcon(android.R.drawable.stat_notify_more)
                     .setAutoCancel(true)
@@ -69,7 +69,7 @@ public final class MissionNotificationReceiver extends BroadcastReceiver {
         } else {
             notification = new Notification.Builder(context)
                     .setContentTitle(title)
-                    .setContentText("司令部へ戻って戦果を確認する。")
+                    .setContentText(GameText.text("Return to command to review the report.", "司令部へ戻って戦果を確認する。"))
                     .setStyle(new Notification.BigTextStyle().bigText(pendingReport))
                     .setSmallIcon(android.R.drawable.stat_notify_more)
                     .setAutoCancel(true)
@@ -126,8 +126,8 @@ public final class MissionNotificationReceiver extends BroadcastReceiver {
     private static String extractNotificationTitle(String pendingReport) {
         String[] lines = pendingReport.split("\n");
         if (lines.length > 0 && !lines[0].isEmpty()) {
-            return "遠征完了: " + lines[0];
+            return GameText.text("Mission complete: ", "遠征完了: ") + lines[0];
         }
-        return "遠征完了";
+        return GameText.text("Mission complete", "遠征完了");
     }
 }

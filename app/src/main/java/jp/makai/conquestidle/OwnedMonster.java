@@ -27,7 +27,7 @@ final class OwnedMonster {
         if (suffix.length() > 4) {
             suffix = suffix.substring(suffix.length() - 4);
         }
-        return getMonster().name + " #" + suffix;
+        return GameText.monsterName(getMonster()) + " #" + suffix;
     }
 
     JSONObject toJson() throws JSONException {

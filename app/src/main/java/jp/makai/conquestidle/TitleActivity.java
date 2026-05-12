@@ -42,6 +42,7 @@ public final class TitleActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_title);
+        SystemBarInsets.applyToContent(this);
 
         gameState = new GameState(this);
         demonLordValueView = findViewById(R.id.demonLordValue);
@@ -92,13 +93,13 @@ public final class TitleActivity extends Activity {
         demonLordValueView.setText("Lv" + demonLordLevel
                 + " / EXP " + Progression.getExpIntoCurrentDemonLordLevel(demonLordExp)
                 + " / " + Progression.getDemonLordExpForNextLevel(demonLordLevel)
-                + " / 編成上限 " + gameState.getAvailablePartySlots() + "体");
+                + GameText.text(" / Party limit ", " / 編成上限 ") + gameState.getAvailablePartySlots() + GameText.text("", "体"));
 
         StringBuilder monsterBuilder = new StringBuilder();
-        monsterBuilder.append("編成中 ").append(monsterIds.size()).append(" / ").append(gameState.getAvailablePartySlots()).append("体")
-                .append("  所持 ").append(gameState.getOwnedMonsters().size()).append("体");
+        monsterBuilder.append(GameText.text("Party ", "編成中 ")).append(monsterIds.size()).append(" / ").append(gameState.getAvailablePartySlots()).append(GameText.text(" units", "体"))
+                .append(GameText.text("  Owned ", "  所持 ")).append(gameState.getOwnedMonsters().size()).append(GameText.text(" units", "体"));
         if (monsterIds.isEmpty()) {
-            monsterBuilder.append("\n出撃可能な個体がいない。");
+            monsterBuilder.append(GameText.text("\nNo deployable units.", "\n出撃可能な個体がいない。"));
         }
         for (String monsterId : monsterIds) {
             OwnedMonster ownedMonster = gameState.getOwnedMonster(monsterId);
@@ -126,37 +127,37 @@ public final class TitleActivity extends Activity {
             TimeOption activeTime = GameData.getTimeOption(activeMission.timeId);
             int activeProgress = Math.min(activeVillage.requiredControl, activeMission.initialVillageProgress + activeMission.earnedControl);
             int activeRemainingSeconds = Math.max(0, activeTime.durationSeconds - activeMission.elapsedSeconds);
-            villageSummaryView.setText(village.name + " / " + GameData.getVillageProgressLabel(village, progress)
-                    + "\n出撃中: " + activeVillage.name + " / " + GameData.getVillageProgressLabel(activeVillage, activeProgress));
-            timeSummaryView.setText(timeOption.label + " / " + timeOption.description
-                    + "\n進行中: 残り " + MissionEngine.formatDuration(activeRemainingSeconds)
-                    + " / 経過 " + MissionEngine.formatDuration(activeMission.elapsedSeconds)
-                    + "\n終了予定: " + MissionEngine.formatDateTime(activeMission.expectedCompletionAtEpochMillis));
-            sortieButton.setText("出撃中の部隊を見る");
+            villageSummaryView.setText(GameText.villageName(village) + " / " + GameData.getVillageProgressLabel(village, progress)
+                    + GameText.text("\nOn mission: ", "\n出撃中: ") + GameText.villageName(activeVillage) + " / " + GameData.getVillageProgressLabel(activeVillage, activeProgress));
+            timeSummaryView.setText(GameText.timeLabel(timeOption) + " / " + GameText.timeDescription(timeOption)
+                    + GameText.text("\nIn progress: remaining ", "\n進行中: 残り ") + MissionEngine.formatDuration(activeRemainingSeconds)
+                    + GameText.text(" / elapsed ", " / 経過 ") + MissionEngine.formatDuration(activeMission.elapsedSeconds)
+                    + GameText.text("\nEnds around: ", "\n終了予定: ") + MissionEngine.formatDateTime(activeMission.expectedCompletionAtEpochMillis));
+            sortieButton.setText(GameText.text("View Active Party", "出撃中の部隊を見る"));
         } else {
-            villageSummaryView.setText(village.name + " / " + GameData.getVillageProgressLabel(village, progress));
-            timeSummaryView.setText(timeOption.label + " / " + timeOption.description);
-            sortieButton.setText(pendingReport.isEmpty() ? "出撃" : "前回の戦果を見る");
+            villageSummaryView.setText(GameText.villageName(village) + " / " + GameData.getVillageProgressLabel(village, progress));
+            timeSummaryView.setText(GameText.timeLabel(timeOption) + " / " + GameText.timeDescription(timeOption));
+            sortieButton.setText(pendingReport.isEmpty() ? GameText.text("Deploy", "出撃") : GameText.text("View Last Report", "前回の戦果を見る"));
         }
 
         StringBuilder builder = new StringBuilder();
         for (Village entry : GameData.VILLAGES) {
             if (!GameData.isVillageUnlocked(entry, demonLordLevel)) {
-                builder.append(entry.name)
-                        .append("  未解放 (魔王Lv")
+                builder.append(GameText.villageName(entry))
+                        .append(GameText.text("  Locked (Demon Lord Lv", "  未解放 (魔王Lv"))
                         .append(entry.requiredDemonLordLevel)
                         .append(")");
             } else {
                 int value = gameState.getVillageProgress(entry.id);
-                builder.append(entry.name)
+                builder.append(GameText.villageName(entry))
                         .append("  ")
                         .append(GameData.getVillageProgressLabel(entry, value));
                 if (value >= entry.requiredControl) {
-                    builder.append("  征服済み / 再攻略可");
+                    builder.append(GameText.text("  Conquered / Replayable", "  征服済み / 再攻略可"));
                 }
             }
             if (entry.isDungeon()) {
-                builder.append("  99階ダンジョン");
+                builder.append(GameText.text("  99-floor dungeon", "  99階ダンジョン"));
             }
             builder.append('\n');
         }
@@ -203,11 +204,11 @@ public final class TitleActivity extends Activity {
             MissionEngine.syncActiveMission(gameState, System.currentTimeMillis());
             outputStream.write(gameState.exportToJson().getBytes(StandardCharsets.UTF_8));
             outputStream.flush();
-            saveStatusView.setText("保存完了: " + uri.getLastPathSegment());
-            Toast.makeText(this, "セーブデータを書き出しました。", Toast.LENGTH_SHORT).show();
+            saveStatusView.setText(GameText.text("Export complete: ", "保存完了: ") + uri.getLastPathSegment());
+            Toast.makeText(this, GameText.text("Save data exported.", "セーブデータを書き出しました。"), Toast.LENGTH_SHORT).show();
         } catch (IOException | JSONException e) {
-            saveStatusView.setText("保存失敗: " + e.getMessage());
-            Toast.makeText(this, "保存に失敗しました。", Toast.LENGTH_SHORT).show();
+            saveStatusView.setText(GameText.text("Export failed: ", "保存失敗: ") + e.getMessage());
+            Toast.makeText(this, GameText.text("Export failed.", "保存に失敗しました。"), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,11 +220,11 @@ public final class TitleActivity extends Activity {
             String json = readAll(inputStream);
             gameState.importFromJson(json);
             refreshSummaries();
-            saveStatusView.setText("読込完了: " + uri.getLastPathSegment());
-            Toast.makeText(this, "セーブデータを読み込みました。", Toast.LENGTH_SHORT).show();
+            saveStatusView.setText(GameText.text("Import complete: ", "読込完了: ") + uri.getLastPathSegment());
+            Toast.makeText(this, GameText.text("Save data imported.", "セーブデータを読み込みました。"), Toast.LENGTH_SHORT).show();
         } catch (IOException | JSONException e) {
-            saveStatusView.setText("読込失敗: " + e.getMessage());
-            Toast.makeText(this, "読込に失敗しました。", Toast.LENGTH_SHORT).show();
+            saveStatusView.setText(GameText.text("Import failed: ", "読込失敗: ") + e.getMessage());
+            Toast.makeText(this, GameText.text("Import failed.", "読込に失敗しました。"), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -250,18 +251,21 @@ public final class TitleActivity extends Activity {
 
     private void confirmResetAll() {
         new AlertDialog.Builder(this)
-                .setTitle("すべて初期化")
-                .setMessage("魔王レベル、モンスター経験値、村の進行、出撃中データをすべて初期化する。")
-                .setPositiveButton("初期化する", (dialog, which) -> resetAllData())
-                .setNegativeButton("やめる", null)
+                .setTitle(GameText.text("Reset Everything", "すべて初期化"))
+                .setMessage(GameText.text(
+                        "This resets Demon Lord level, unit growth, village progress, and active missions.",
+                        "魔王レベル、モンスター経験値、村の進行、出撃中データをすべて初期化する。"
+                ))
+                .setPositiveButton(GameText.text("Reset", "初期化する"), (dialog, which) -> resetAllData())
+                .setNegativeButton(GameText.text("Cancel", "やめる"), null)
                 .show();
     }
 
     private void resetAllData() {
         MissionNotificationReceiver.cancel(this);
         gameState.resetAll();
-        saveStatusView.setText("初期化完了");
+        saveStatusView.setText(GameText.text("Reset complete", "初期化完了"));
         refreshSummaries();
-        Toast.makeText(this, "すべて初期化しました。", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, GameText.text("Everything has been reset.", "すべて初期化しました。"), Toast.LENGTH_SHORT).show();
     }
 }

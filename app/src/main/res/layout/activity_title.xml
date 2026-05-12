@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="魔界遠征司令部"
+            android:text="@string/title_header"
             android:textColor="@android:color/white"
             android:textSize="34sp"
             android:textStyle="bold" />
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="モンスターを派遣し、人間の村をじわじわ征服する放置型侵攻ゲーム"
+            android:text="@string/title_subtitle"
             android:textColor="#D6C3BA"
             android:textSize="16sp" />
 
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="現在の編成"
+                android:text="@string/current_party"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="魔王"
+                android:text="@string/demon_lord"
                 android:textColor="#FFCFB4"
                 android:textStyle="bold" />
 
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="派遣モンスター"
+                android:text="@string/deployed_monsters"
                 android:textColor="#FFCFB4"
                 android:textStyle="bold" />
 
@@ -82,14 +82,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_secondary"
-                android:text="モンスター選択へ"
+                android:text="@string/choose_monsters"
                 android:textColor="@android:color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="攻める村"
+                android:text="@string/target_village"
                 android:textColor="#FFCFB4"
                 android:textStyle="bold" />
 
@@ -107,14 +107,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_secondary"
-                android:text="村選択へ"
+                android:text="@string/choose_village"
                 android:textColor="@android:color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="作戦時間"
+                android:text="@string/mission_duration"
                 android:textColor="#FFCFB4"
                 android:textStyle="bold" />
 
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_secondary"
-                android:text="時間選択へ"
+                android:text="@string/choose_time"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -141,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:background="@drawable/button_primary"
-                android:text="出撃"
+                android:text="@string/sortie"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -150,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="セーブデータ"
+                android:text="@string/save_data"
                 android:textColor="#FFCFB4"
                 android:textStyle="bold" />
 
@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="未操作"
+                android:text="@string/idle_status"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
@@ -169,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_secondary"
-                android:text="ファイルへ保存"
+                android:text="@string/export_save"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -178,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_secondary"
-                android:text="ファイルから読込"
+                android:text="@string/import_save"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -187,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_secondary"
-                android:text="すべて初期化"
+                android:text="@string/reset_all"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
@@ -202,7 +202,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="征服状況"
+                android:text="@string/conquest_status"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />

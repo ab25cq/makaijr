@@ -1,13 +1,15 @@
 package com.makaijr;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 import java.util.Locale;
 
 final class MissionEngine {
-    private static final double FULL_ATTRITION_SECONDS = 6.0 * 60.0 * 60.0;
+    private static final int DIVINE_WRATH_GRACE_SECONDS = 5 * 60;
+    private static final int DIVINE_WRATH_CHECK_INTERVAL_SECONDS = 60;
+    private static final int DIVINE_WRATH_ODDS_PER_CHECK = 2000;
+    private static final double FULL_ATTRITION_SECONDS = 3.25 * 60.0 * 60.0;
 
     private MissionEngine() {
     }
@@ -85,7 +87,10 @@ final class MissionEngine {
                         ""
                 )),
                 replayMode,
-                "作戦開始。司令部へ戻っても経過時間ぶん自動で侵攻が進む。"
+                GameText.text(
+                        "Mission started. Progress continues automatically while away from command.",
+                        "作戦開始。司令部へ戻っても経過時間ぶん自動で侵攻が進む。"
+                )
         );
         gameState.setActiveMission(mission);
         MissionNotificationReceiver.schedule(gameState.getAppContext(), mission);
@@ -115,11 +120,14 @@ final class MissionEngine {
                 return i + 1;
             }
             if (updated.partyHp <= 0) {
-                completeMission(gameState, updated, "モンスターが撤退した。今回の制圧進行だけ持ち帰る。");
+                completeMission(gameState, updated, buildAnnihilationMessage(updated));
                 return i + 1;
             }
             if (updated.elapsedSeconds >= timeOption.durationSeconds) {
-                completeMission(gameState, updated, "作戦時間が終了した。現時点の戦果を確定する。");
+                completeMission(gameState, updated, GameText.text(
+                        "Mission time ended. Current gains have been confirmed.",
+                        "作戦時間が終了した。現時点の戦果を確定する。"
+                ));
                 return i + 1;
             }
         }
@@ -186,6 +194,33 @@ final class MissionEngine {
         Monster actingMonster = getMonsterForPartyToken(mission.partyMonsterIds.get(actingMonsterIndex));
         int dealt = cumulativeControlGain(mission, nextElapsed) - cumulativeControlGain(mission, mission.elapsedSeconds);
         int taken = cumulativeDamageTaken(mission, nextElapsed) - cumulativeDamageTaken(mission, mission.elapsedSeconds);
+        boolean divineWrath = isDivineWrathTriggered(mission, nextElapsed);
+        int nextPartyHp = divineWrath ? 0 : Math.max(0, mission.partyHp - taken);
+        String nextLogLine = divineWrath
+                ? String.format(
+                        Locale.US,
+                        GameText.text(
+                                "%02d:%02d:%02d  Divine wrath struck. The whole party vanished, and the villagers claimed victory.",
+                                "%02d:%02d:%02d  神の怒りが落ちた。部隊は跡形もなく消え、村人たちが勝利を叫んだ。"
+                        ),
+                        nextElapsed / 3600,
+                        (nextElapsed % 3600) / 60,
+                        nextElapsed % 60
+                )
+                : String.format(
+                        Locale.US,
+                        GameText.text(
+                                "%02d:%02d:%02d  %s gained conquest +%d. %s resistance caused party damage +%d.",
+                                "%02d:%02d:%02d  %s が 制圧 +%d、%s の抵抗で部隊被害 +%d。"
+                        ),
+                        nextElapsed / 3600,
+                        (nextElapsed % 3600) / 60,
+                        nextElapsed % 60,
+                        GameText.monsterName(actingMonster),
+                        dealt,
+                        GameText.villageName(village),
+                        taken
+                );
 
         return new ActiveMission(
                 mission.villageId,
@@ -196,7 +231,7 @@ final class MissionEngine {
                 mission.partyMaxHp,
                 mission.initialVillageProgress,
                 nextElapsed,
-                Math.max(0, mission.partyHp - taken),
+                nextPartyHp,
                 Math.max(0, mission.remainingVillageControl - dealt),
                 mission.earnedControl + dealt,
                 mission.tribute + (dealt * 3),
@@ -205,18 +240,17 @@ final class MissionEngine {
                 mission.lastUpdatedAtEpochMillis,
                 mission.expectedCompletionAtEpochMillis,
                 mission.replayMode,
-                String.format(
-                        Locale.US,
-                        "%02d:%02d:%02d  %s が 制圧 +%d、%s の抵抗で部隊被害 +%d。",
-                        nextElapsed / 3600,
-                        (nextElapsed % 3600) / 60,
-                        nextElapsed % 60,
-                        actingMonster.name,
-                        dealt,
-                        village.name,
-                        taken
-                )
+                nextLogLine
         );
+    }
+
+    private static boolean isDivineWrathTriggered(ActiveMission mission, int elapsedSeconds) {
+        if (elapsedSeconds < DIVINE_WRATH_GRACE_SECONDS
+                || elapsedSeconds % DIVINE_WRATH_CHECK_INTERVAL_SECONDS != 0) {
+            return false;
+        }
+        int checkNumber = elapsedSeconds / DIVINE_WRATH_CHECK_INTERVAL_SECONDS;
+        return deterministicRoll(mission.seed, checkNumber, 97, 1, DIVINE_WRATH_ODDS_PER_CHECK) == 1;
     }
 
     private static int cumulativeControlGain(ActiveMission mission, int elapsedSeconds) {
@@ -245,14 +279,14 @@ final class MissionEngine {
     }
 
     private static double getAttritionFactor(ActiveMission mission, Village village) {
-        double pressureScore = (village.attack * 2.0) + (village.defense * 0.8);
-        double enduranceScore = mission.partyDefense + (mission.partyMaxHp * 0.12);
+        double pressureScore = (village.attack * 2.35) + (village.defense * 1.05);
+        double enduranceScore = (mission.partyDefense * 0.92) + (mission.partyMaxHp * 0.10);
         double ratio = pressureScore / Math.max(1.0, enduranceScore);
         double preparednessRatio = getPreparednessRatio(mission, village);
         double underpreparedPenalty = preparednessRatio >= 1.0
                 ? 1.0
-                : 1.0 + Math.pow((1.0 - preparednessRatio) * 4.6, 3.2);
-        return clamp(ratio * underpreparedPenalty, 0.25, 14.00);
+                : 1.0 + Math.pow((1.0 - preparednessRatio) * 5.3, 3.4);
+        return clamp(ratio * underpreparedPenalty, 0.35, 24.00);
     }
 
     private static double getPreparednessRatio(ActiveMission mission, Village village) {
@@ -270,17 +304,17 @@ final class MissionEngine {
     private static double getDurationRiskFactor(TimeOption timeOption) {
         switch (timeOption.id) {
             case "15m":
-                return 0.55;
+                return 0.85;
             case "30m":
-                return 0.75;
-            case "45m":
-                return 0.95;
-            case "1h":
                 return 1.15;
+            case "45m":
+                return 1.45;
+            case "1h":
+                return 1.85;
             case "2h":
-                return 1.80;
+                return 3.20;
             case "3h":
-                return 3.00;
+                return 5.40;
             default:
                 return 1.00;
         }
@@ -303,54 +337,94 @@ final class MissionEngine {
 
     private static String buildVictoryMessage(Village village) {
         if (village.isDungeon()) {
-            return "第99階まで踏破した。難攻不落の最終ダンジョンがついに陥落した。";
+            return GameText.text(
+                    "The 99th floor has fallen. The final dungeon is conquered.",
+                    "第99階まで踏破した。難攻不落の最終ダンジョンがついに陥落した。"
+            );
         }
-        return "村の支配率が 100% に到達した。魔界の旗が立った。";
+        return GameText.text(
+                "Village control reached 100%. Your banner now flies there.",
+                "村の支配率が 100% に到達した。魔界の旗が立った。"
+        );
+    }
+
+    private static String buildAnnihilationMessage(ActiveMission mission) {
+        if (isDivineWrathLog(mission.lastLogLine)) {
+            return GameText.text(
+                    "Divine wrath fell without warning. No matter how strong the party was, the villagers won this day.",
+                    "神の怒りが突然降り注いだ。どれほど強い部隊でも抗えず、この日は村人たちの勝利となった。"
+            );
+        }
+        return GameText.text(
+                "The party was annihilated. Its final charge still scarred the target.",
+                "部隊は全滅した。だが最後の突撃で敵地に傷跡を残した。"
+        );
+    }
+
+    private static boolean isDivineWrathLog(String logLine) {
+        return logLine != null
+                && (logLine.contains("Divine wrath") || logLine.contains("神の怒り"));
     }
 
     private static void completeMission(GameState gameState, ActiveMission mission, String message) {
         MissionNotificationReceiver.cancel(gameState.getAppContext());
         Village village = GameData.getVillage(mission.villageId);
+        boolean annihilated = mission.partyHp <= 0;
+        int resultControlCap = mission.replayMode
+                ? village.requiredControl
+                : Math.max(0, village.requiredControl - mission.initialVillageProgress);
+        int controlBeforeSacrifice = Math.max(0, Math.min(resultControlCap, mission.earnedControl));
+        int sacrificeControl = Math.min(
+                Math.max(0, resultControlCap - controlBeforeSacrifice),
+                getSacrificeControlBonus(mission, village, annihilated)
+        );
+        int earnedControlForResult = controlBeforeSacrifice + sacrificeControl;
+        int tributeForResult = mission.tribute + (sacrificeControl * 3);
         int previousProgress = gameState.getVillageProgress(village.id);
         if (!mission.replayMode) {
-            gameState.addVillageProgress(village.id, mission.earnedControl, village.requiredControl);
+            gameState.addVillageProgress(village.id, earnedControlForResult, village.requiredControl);
         }
-        int missionFinalProgress = Math.min(village.requiredControl, mission.initialVillageProgress + mission.earnedControl);
+        int missionFinalProgress = Math.min(village.requiredControl, mission.initialVillageProgress + earnedControlForResult);
         int finalProgress = mission.replayMode ? village.requiredControl : gameState.getVillageProgress(village.id);
         boolean clearedMission = missionFinalProgress >= village.requiredControl;
         boolean newlyConquered = !mission.replayMode
                 && mission.initialVillageProgress < village.requiredControl
                 && finalProgress >= village.requiredControl;
-        boolean annihilated = mission.partyHp <= 0;
-        double progressRewardMultiplier = mission.earnedControl <= 0
+        double progressRewardMultiplier = earnedControlForResult <= 0
                 ? 0.0
-                : ((double) mission.earnedControl / village.requiredControl);
+                : ((double) earnedControlForResult / village.requiredControl);
         if (annihilated) {
             progressRewardMultiplier *= 0.5;
         }
         List<OwnedMonster> recruits = mission.replayMode
-                ? new ArrayList<>()
+                ? gameState.grantReplayRecruitRewards(village.id, earnedControlForResult, clearedMission, annihilated)
                 : gameState.grantVillageRecruitRewards(village.id, previousProgress, finalProgress);
 
         StringBuilder builder = new StringBuilder();
         builder.append(message)
-                .append("\n戦果: 制圧進行 +")
-                .append(mission.earnedControl)
-                .append(" / 供物 ")
-                .append(mission.tribute);
+                .append(GameText.text("\nGains: conquest +", "\n戦果: 制圧進行 +"))
+                .append(earnedControlForResult)
+                .append(GameText.text(" / tribute ", " / 供物 "))
+                .append(tributeForResult);
+        if (sacrificeControl > 0) {
+            builder.append(GameText.text(
+                    "\nFinal charge: conquest +",
+                    "\n捨て駒の最後の突撃: 制圧進行 +"
+            )).append(sacrificeControl);
+        }
 
         if (newlyConquered) {
-            builder.append("\n").append(village.name).append(" は征服済みになった。");
+            builder.append("\n").append(GameText.villageName(village)).append(GameText.text(" is now conquered.", " は征服済みになった。"));
             appendRewardSummary(builder, gameState, village, mission.partyMonsterIds, progressRewardMultiplier, annihilated);
         } else if (clearedMission) {
             if (mission.replayMode) {
-                builder.append("\n").append(village.name).append(" を再攻略した。");
+                builder.append("\n").append(GameText.villageName(village)).append(GameText.text(" was replayed.", " を再攻略した。"));
             } else {
-                builder.append("\n").append(village.name).append(" は征服済みになった。");
+                builder.append("\n").append(GameText.villageName(village)).append(GameText.text(" is now conquered.", " は征服済みになった。"));
             }
             appendRewardSummary(builder, gameState, village, mission.partyMonsterIds, progressRewardMultiplier, annihilated);
         } else {
-            builder.append("\n現在の進行: ").append(GameData.getVillageProgressLabel(village, missionFinalProgress));
+            builder.append(GameText.text("\nCurrent progress: ", "\n現在の進行: ")).append(GameData.getVillageProgressLabel(village, missionFinalProgress));
             appendRewardSummary(builder, gameState, village, mission.partyMonsterIds, progressRewardMultiplier, annihilated);
         }
         appendRecruitSummary(builder, recruits);
@@ -361,6 +435,15 @@ final class MissionEngine {
 
         gameState.clearActiveMission();
         gameState.setPendingMissionReport(builder.toString());
+    }
+
+    private static int getSacrificeControlBonus(ActiveMission mission, Village village, boolean annihilated) {
+        if (!annihilated) {
+            return 0;
+        }
+        int partySize = Math.max(1, mission.partyMonsterIds.size());
+        double sacrificeRate = Math.min(0.055, 0.015 + (partySize * 0.008));
+        return Math.max(1, (int) Math.ceil(village.requiredControl * sacrificeRate));
     }
 
     private static void appendRewardSummary(
@@ -393,11 +476,11 @@ final class MissionEngine {
         int currentDemonLevel = gameState.getDemonLordLevel();
 
         StringBuilder builder = new StringBuilder();
-        builder.append("征服報酬: 魔王 EXP +").append(demonExpReward);
+        builder.append(GameText.text("Conquest reward: Demon Lord EXP +", "征服報酬: 魔王 EXP +")).append(demonExpReward);
         if (annihilated) {
-            builder.append("  (全滅したため半減)");
+            builder.append(GameText.text("  (halved due to wipeout)", "  (全滅したため半減)"));
         } else if (rewardMultiplier < 1.0) {
-            builder.append("  (今回進めた制圧率ぶん)");
+            builder.append(GameText.text("  (based on this mission's conquest progress)", "  (今回進めた制圧率ぶん)"));
         }
 
         int monsterExpReward = Math.max(1, (int) Math.floor(GameData.getMonsterExpReward(village) * rewardMultiplier));
@@ -420,8 +503,12 @@ final class MissionEngine {
         }
 
         if (currentDemonLevel > previousDemonLevel) {
-            builder.append("\n魔王が Lv").append(previousDemonLevel).append(" から Lv").append(currentDemonLevel).append(" に上がった。");
-            builder.append("\n編成上限は ").append(Progression.getPartySizeForDemonLordLevel(currentDemonLevel)).append(" 体。");
+            builder.append(GameText.text("\nDemon Lord rose from Lv", "\n魔王が Lv")).append(previousDemonLevel)
+                    .append(GameText.text(" to Lv", " から Lv")).append(currentDemonLevel)
+                    .append(GameText.text(".", " に上がった。"));
+            builder.append(GameText.text("\nParty limit is now ", "\n編成上限は "))
+                    .append(Progression.getPartySizeForDemonLordLevel(currentDemonLevel))
+                    .append(GameText.text(" units.", " 体。"));
         }
         return builder.toString();
     }
@@ -430,11 +517,11 @@ final class MissionEngine {
         if (recruits.isEmpty()) {
             return;
         }
-        builder.append("\n新たな配下:");
+        builder.append(GameText.text("\nNew allies:", "\n新たな配下:"));
         for (OwnedMonster recruit : recruits) {
             builder.append("\n")
                     .append(recruit.getDisplayName())
-                    .append(" が加わった。");
+                    .append(GameText.text(" joined.", " が加わった。"));
         }
     }
 
@@ -442,7 +529,7 @@ final class MissionEngine {
         if (partyMonsterIds.isEmpty()) {
             return;
         }
-        builder.append("\n戦死した個体:");
+        builder.append(GameText.text("\nLost units:", "\n戦死した個体:"));
         for (String monsterId : partyMonsterIds) {
             OwnedMonster ownedMonster = gameState.getOwnedMonster(monsterId);
             if (ownedMonster == null) {

@@ -159,9 +159,12 @@ final class GameData {
 
     static String getMonsterUnlockRequirement(Monster monster) {
         if ("abyssdragon".equals(monster.id)) {
-            return "魔王 Lv" + monster.requiredDemonLordLevel + " / 奈落封鎖戦線・99階層 を制圧";
+            return GameText.text(
+                    "Demon Lord Lv" + monster.requiredDemonLordLevel + " / Conquer Abyss Lockfront, 99 Floors",
+                    "魔王 Lv" + monster.requiredDemonLordLevel + " / 奈落封鎖戦線・99階層 を制圧"
+            );
         }
-        return "魔王 Lv" + monster.requiredDemonLordLevel;
+        return GameText.text("Demon Lord Lv" + monster.requiredDemonLordLevel, "魔王 Lv" + monster.requiredDemonLordLevel);
     }
 
     static String getVillageProgressLabel(Village village, int progress) {
@@ -169,9 +172,12 @@ final class GameData {
         int percent = safeProgress * 100 / village.requiredControl;
         if (village.isDungeon()) {
             int clearedFloors = safeProgress * village.dungeonFloors / village.requiredControl;
-            return "踏破 " + clearedFloors + " / " + village.dungeonFloors + "階 (" + percent + "%)";
+            return GameText.text(
+                    "Cleared " + clearedFloors + " / " + village.dungeonFloors + " floors (" + percent + "%)",
+                    "踏破 " + clearedFloors + " / " + village.dungeonFloors + "階 (" + percent + "%)"
+            );
         }
-        return "制圧率 " + percent + "%";
+        return GameText.text("Conquest " + percent + "%", "制圧率 " + percent + "%");
     }
 
     static String getVillageRemainingLabel(Village village, int remainingControl) {
@@ -179,9 +185,12 @@ final class GameData {
         if (village.isDungeon()) {
             int clearedControl = village.requiredControl - safeRemaining;
             int clearedFloors = clearedControl * village.dungeonFloors / village.requiredControl;
-            return "ダンジョン残耐久 " + safeRemaining + " / 踏破 " + clearedFloors + " / " + village.dungeonFloors + "階";
+            return GameText.text(
+                    "Dungeon resistance " + safeRemaining + " / Cleared " + clearedFloors + " / " + village.dungeonFloors + " floors",
+                    "ダンジョン残耐久 " + safeRemaining + " / 踏破 " + clearedFloors + " / " + village.dungeonFloors + "階"
+            );
         }
-        return "村の残り抵抗値 " + safeRemaining;
+        return GameText.text("Remaining village resistance " + safeRemaining, "村の残り抵抗値 " + safeRemaining);
     }
 
     static String getVillageReferenceTimeLabel(Village village) {
@@ -190,12 +199,18 @@ final class GameData {
         int hours = (seconds % 86400) / 3600;
         int minutes = (seconds % 3600) / 60;
         if (days > 0) {
-            return days + "日" + (hours > 0 ? " " + hours + "時間" : "");
+            return GameText.text(
+                    days + " day" + (days == 1 ? "" : "s") + (hours > 0 ? " " + hours + "h" : ""),
+                    days + "日" + (hours > 0 ? " " + hours + "時間" : "")
+            );
         }
         if (hours > 0) {
-            return hours + "時間" + (minutes > 0 ? " " + minutes + "分" : "");
+            return GameText.text(
+                    hours + "h" + (minutes > 0 ? " " + minutes + "m" : ""),
+                    hours + "時間" + (minutes > 0 ? " " + minutes + "分" : "")
+            );
         }
-        return minutes + "分";
+        return GameText.text(minutes + "m", minutes + "分");
     }
 
     static SelectionOption[] buildMonsterOptions() {
@@ -204,9 +219,9 @@ final class GameData {
             Monster monster = MONSTERS[i];
             options[i] = new SelectionOption(
                     monster.id,
-                    monster.name + "  解放条件 " + getMonsterUnlockRequirement(monster)
+                    GameText.monsterName(monster) + GameText.text("  Unlock ", "  解放条件 ") + getMonsterUnlockRequirement(monster)
                             + " / ATK " + monster.attack + " / DEF " + monster.defense + " / HP " + monster.maxHp,
-                    monster.tagline + "\n" + monster.description
+                    GameText.monsterTagline(monster) + "\n" + GameText.monsterDescription(monster)
             );
         }
         return options;
@@ -217,17 +232,17 @@ final class GameData {
         for (int i = 0; i < VILLAGES.length; i++) {
             Village village = VILLAGES[i];
             boolean unlocked = isVillageUnlocked(village, demonLordLevel);
-            String prefix = unlocked ? "" : "未解放  ";
-            String areaType = village.isDungeon() ? "99階ダンジョン" : "村";
+            String prefix = unlocked ? "" : GameText.text("Locked  ", "未解放  ");
+            String areaType = village.isDungeon() ? GameText.text("99-floor dungeon", "99階ダンジョン") : GameText.text("Village", "村");
             options[i] = new SelectionOption(
                     village.id,
-                    prefix + village.name + "  " + areaType
-                            + "  解放Lv " + village.requiredDemonLordLevel
-                            + " / 必要制圧 " + village.requiredControl,
-                    "反撃 " + village.attack + " / 防衛 " + village.defense
-                            + "\n攻略目安: " + getVillageReferenceTimeLabel(village)
-                            + "\n解放条件: 魔王 Lv" + village.requiredDemonLordLevel
-                            + "\n" + village.description,
+                    prefix + GameText.villageName(village) + "  " + areaType
+                            + GameText.text("  Unlock Lv ", "  解放Lv ") + village.requiredDemonLordLevel
+                            + GameText.text(" / Required conquest ", " / 必要制圧 ") + village.requiredControl,
+                    GameText.text("Attack ", "反撃 ") + village.attack + GameText.text(" / Defense ", " / 防衛 ") + village.defense
+                            + GameText.text("\nClear estimate: ", "\n攻略目安: ") + getVillageReferenceTimeLabel(village)
+                            + GameText.text("\nUnlock: Demon Lord Lv", "\n解放条件: 魔王 Lv") + village.requiredDemonLordLevel
+                            + "\n" + GameText.villageDescription(village),
                     unlocked
             );
         }
@@ -240,8 +255,8 @@ final class GameData {
             TimeOption timeOption = TIME_OPTIONS[i];
             options[i] = new SelectionOption(
                     timeOption.id,
-                    timeOption.label + " 作戦",
-                    timeOption.description
+                    GameText.timeLabel(timeOption) + " " + GameText.missionWord(),
+                    GameText.timeDescription(timeOption)
             );
         }
         return options;

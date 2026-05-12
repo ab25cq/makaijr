@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="派遣モンスター選択"
+                android:text="@string/monster_select_title"
                 android:textColor="@android:color/white"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_primary"
-                android:text="決定して戻る"
+                android:text="@string/confirm_and_return"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
         </LinearLayout>

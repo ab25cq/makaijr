@@ -3,12 +3,15 @@ package com.makaijr;
 public final class TimeSelectActivity extends BaseSelectionActivity {
     @Override
     protected String getScreenTitle() {
-        return "作戦時間を選択";
+        return GameText.text("Choose Mission Duration", "作戦時間を選択");
     }
 
     @Override
     protected String getScreenSubtitle() {
-        return "出撃は実時間で進む。司令部を閉じていても経過時間ぶん自動で侵攻する。";
+        return GameText.text(
+                "Missions progress in real time, even while the app is closed.",
+                "出撃は実時間で進む。司令部を閉じていても経過時間ぶん自動で侵攻する。"
+        );
     }
 
     @Override

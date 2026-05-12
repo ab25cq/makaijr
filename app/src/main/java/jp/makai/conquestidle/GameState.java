@@ -231,6 +231,31 @@ final class GameState {
         return recruits;
     }
 
+    List<OwnedMonster> grantReplayRecruitRewards(String villageId, int earnedControl, boolean clearedMission, boolean annihilated) {
+        Village village = GameData.getVillage(villageId);
+        List<OwnedMonster> recruits = new ArrayList<>();
+        if (earnedControl <= 0) {
+            return recruits;
+        }
+
+        double progressRatio = (double) earnedControl / Math.max(1, village.requiredControl);
+        int recruitCount = 0;
+        if (clearedMission) {
+            recruitCount = village.requiredDemonLordLevel <= 2 ? 2 : 1;
+        } else if (progressRatio >= 0.50) {
+            recruitCount = 1;
+        }
+        if (annihilated && recruitCount > 1) {
+            recruitCount = 1;
+        }
+
+        for (int i = 0; i < recruitCount; i++) {
+            Monster recruit = GameData.getRecruitRewardMonster(village, i);
+            recruits.add(recruitMonster(recruit.id));
+        }
+        return recruits;
+    }
+
     OwnedMonster recruitMonster(String monsterId) {
         List<OwnedMonster> roster = loadRoster();
         OwnedMonster recruit = new OwnedMonster(

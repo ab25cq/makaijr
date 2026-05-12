@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">魔王</string>
+    <string name="title_header">魔界遠征司令部</string>
+    <string name="title_subtitle">モンスターを派遣し、人間の村をじわじわ征服する放置型侵攻ゲーム</string>
+    <string name="current_party">現在の編成</string>
+    <string name="demon_lord">魔王</string>
+    <string name="deployed_monsters">派遣モンスター</string>
+    <string name="choose_monsters">モンスター選択へ</string>
+    <string name="target_village">攻める村</string>
+    <string name="choose_village">村選択へ</string>
+    <string name="mission_duration">作戦時間</string>
+    <string name="choose_time">時間選択へ</string>
+    <string name="sortie">出撃</string>
+    <string name="save_data">セーブデータ</string>
+    <string name="idle_status">未操作</string>
+    <string name="export_save">ファイルへ保存</string>
+    <string name="import_save">ファイルから読込</string>
+    <string name="reset_all">すべて初期化</string>
+    <string name="conquest_status">征服状況</string>
+    <string name="confirm_and_return">決定して戻る</string>
+    <string name="monster_select_title">派遣モンスター選択</string>
+    <string name="battle_log">戦況ログ</string>
+    <string name="return_to_command">司令部へ戻る</string>
+</resources>

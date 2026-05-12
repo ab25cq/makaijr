@@ -3,12 +3,15 @@ package com.makaijr;
 public final class VillageSelectActivity extends BaseSelectionActivity {
     @Override
     protected String getScreenTitle() {
-        return "侵攻する村を選択";
+        return GameText.text("Choose Target", "侵攻する村を選択");
     }
 
     @Override
     protected String getScreenSubtitle() {
-        return "村ごとに防衛力と解放条件が違う。最終村は 99 階ダンジョン。";
+        return GameText.text(
+                "Each target has different defenses and unlock conditions. The final target is a 99-floor dungeon.",
+                "村ごとに防衛力と解放条件が違う。最終村は 99 階ダンジョン。"
+        );
     }
 
     @Override

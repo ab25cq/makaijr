@@ -23,6 +23,7 @@ public final class MonsterSelectActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monster_select);
+        SystemBarInsets.applyToContent(this);
 
         gameState = new GameState(this);
 
@@ -32,7 +33,10 @@ public final class MonsterSelectActivity extends Activity {
         descriptionView = findViewById(R.id.choiceDescription);
         Button saveButton = findViewById(R.id.choiceSaveButton);
 
-        subtitleView.setText("所持している個体だけ編成できる。全滅した個体は消滅し、征服率で新たな配下が増える。");
+        subtitleView.setText(GameText.text(
+                "Only owned units can be deployed. Fallen units are removed, and conquest progress adds new allies.",
+                "所持している個体だけ編成できる。全滅した個体は消滅し、征服率で新たな配下が増える。"
+        ));
 
         List<String> selectedIds = gameState.getSelectedMonsterIds();
         List<OwnedMonster> ownedMonsters = gameState.getOwnedMonsters();
@@ -41,7 +45,7 @@ public final class MonsterSelectActivity extends Activity {
             int level = ownedMonster.getLevel();
             CheckBox box = new CheckBox(this);
             box.setText(ownedMonster.getDisplayName()
-                    + "  現在Lv " + level
+                    + GameText.text("  Lv ", "  現在Lv ") + level
                     + "  ATK " + Progression.getMonsterAttack(monster, level)
                     + " / DEF " + Progression.getMonsterDefense(monster, level)
                     + " / HP " + Progression.getMonsterHp(monster, level));
@@ -53,7 +57,10 @@ public final class MonsterSelectActivity extends Activity {
                     box.setChecked(false);
                     Toast.makeText(
                             this,
-                            "今の魔王レベルでは " + gameState.getAvailablePartySlots() + " 体までしか編成できない。",
+                            GameText.text(
+                                    "Current Demon Lord level allows only " + gameState.getAvailablePartySlots() + " units.",
+                                    "今の魔王レベルでは " + gameState.getAvailablePartySlots() + " 体までしか編成できない。"
+                            ),
                             Toast.LENGTH_SHORT
                     ).show();
                 }
@@ -65,8 +72,11 @@ public final class MonsterSelectActivity extends Activity {
         }
 
         if (ownedMonsters.isEmpty()) {
-            statusView.setText("所持モンスター 0体");
-            descriptionView.setText("全滅で戦力が尽きている。村の報酬を得るには、初期化するか既存の生存個体を残す必要がある。");
+            statusView.setText(GameText.text("Owned units: 0", "所持モンスター 0体"));
+            descriptionView.setText(GameText.text(
+                    "No units remain. Reset or keep a surviving unit to continue earning village rewards.",
+                    "全滅で戦力が尽きている。村の報酬を得るには、初期化するか既存の生存個体を残す必要がある。"
+            ));
             saveButton.setEnabled(false);
             return;
         }
@@ -82,7 +92,7 @@ public final class MonsterSelectActivity extends Activity {
                 }
             }
             if (newSelection.isEmpty()) {
-                Toast.makeText(this, "最低 1 体は選んでください。", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, GameText.text("Select at least 1 unit.", "最低 1 体は選んでください。"), Toast.LENGTH_SHORT).show();
                 return;
             }
             gameState.setSelectedMonsterIds(newSelection);
@@ -109,18 +119,18 @@ public final class MonsterSelectActivity extends Activity {
         int monsterLevel = focusedMonster.getLevel();
         Monster monster = focusedMonster.getMonster();
 
-        statusView.setText("魔王 Lv" + demonLordLevel
+        statusView.setText(GameText.demonLord() + " Lv" + demonLordLevel
                 + "  EXP " + Progression.getExpIntoCurrentDemonLordLevel(demonLordExp)
                 + " / " + Progression.getDemonLordExpForNextLevel(demonLordLevel)
-                + "  編成 " + checkedCount + " / " + partySlots
-                + "  所持 " + gameState.getOwnedMonsters().size() + "体");
+                + GameText.text("  Party ", "  編成 ") + checkedCount + " / " + partySlots
+                + GameText.text("  Owned ", "  所持 ") + gameState.getOwnedMonsters().size() + GameText.text("", "体"));
 
         descriptionView.setText(focusedMonster.getDisplayName()
                 + "\n"
-                + monster.tagline
+                + GameText.monsterTagline(monster)
                 + "\n"
-                + monster.description
-                + "\n\n現在の成長: Lv" + monsterLevel
+                + GameText.monsterDescription(monster)
+                + GameText.text("\n\nGrowth: Lv", "\n\n現在の成長: Lv") + monsterLevel
                 + " / EXP " + Progression.getExpIntoCurrentMonsterLevel(monsterExp)
                 + " / " + Progression.getMonsterExpForNextLevel(monsterLevel));
     }

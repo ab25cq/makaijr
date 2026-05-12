@@ -19,6 +19,7 @@ abstract class BaseSelectionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
+        SystemBarInsets.applyToContent(this);
 
         TextView titleView = findViewById(R.id.choiceTitle);
         TextView subtitleView = findViewById(R.id.choiceSubtitle);
