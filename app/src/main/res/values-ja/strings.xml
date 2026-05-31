@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">魔王</string>
+    <string name="app_name">魔界ジュニア</string>
     <string name="title_header">魔界遠征司令部</string>
     <string name="title_subtitle">モンスターを派遣し、人間の村をじわじわ征服する放置型侵攻ゲーム</string>
     <string name="current_party">現在の編成</string>

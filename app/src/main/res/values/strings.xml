@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Demon Lord</string>
+    <string name="app_name">魔界ジュニア</string>
     <string name="title_header">Demon Lord Command</string>
     <string name="title_subtitle">An idle conquest game where you dispatch units and slowly take over human villages.</string>
     <string name="current_party">Current Party</string>

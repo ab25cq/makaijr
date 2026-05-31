@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.makaijr.app-mergeDebugResources-2:/values-v35/values-v35.xml",
+            "map": [
+                {
+                    "source": "/home/ab25cq/makaijr/app/src/main/res/values-v35/styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "7",
+                        "endColumns": "12",
+                        "endOffsets": "406"
+                    }
+                }
+            ]
+        }
+    ]
+}

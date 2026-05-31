@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Demon Lord</string>
+    <string name="app_name">魔界ジュニア</string>
     <string name="battle_log">Battle Log</string>
     <string name="choose_monsters">Choose Units</string>
     <string name="choose_time">Choose Time</string>

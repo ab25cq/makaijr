@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">魔王</string>
+    <string name="app_name">魔界ジュニア</string>
     <string name="battle_log">戦況ログ</string>
     <string name="choose_monsters">モンスター選択へ</string>
     <string name="choose_time">時間選択へ</string>

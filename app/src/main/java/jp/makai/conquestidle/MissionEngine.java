@@ -397,7 +397,13 @@ final class MissionEngine {
             progressRewardMultiplier *= 0.5;
         }
         List<OwnedMonster> recruits = mission.replayMode
-                ? gameState.grantReplayRecruitRewards(village.id, earnedControlForResult, clearedMission, annihilated)
+                ? gameState.grantReplayRecruitRewards(
+                        village.id,
+                        earnedControlForResult,
+                        clearedMission,
+                        annihilated,
+                        mission.seed + mission.elapsedSeconds
+                )
                 : gameState.grantVillageRecruitRewards(village.id, previousProgress, finalProgress);
 
         StringBuilder builder = new StringBuilder();

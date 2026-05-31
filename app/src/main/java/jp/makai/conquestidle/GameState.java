@@ -231,7 +231,7 @@ final class GameState {
         return recruits;
     }
 
-    List<OwnedMonster> grantReplayRecruitRewards(String villageId, int earnedControl, boolean clearedMission, boolean annihilated) {
+    List<OwnedMonster> grantReplayRecruitRewards(String villageId, int earnedControl, boolean clearedMission, boolean annihilated, long rewardSeed) {
         Village village = GameData.getVillage(villageId);
         List<OwnedMonster> recruits = new ArrayList<>();
         if (earnedControl <= 0) {
@@ -241,12 +241,30 @@ final class GameState {
         double progressRatio = (double) earnedControl / Math.max(1, village.requiredControl);
         int recruitCount = 0;
         if (clearedMission) {
-            recruitCount = village.requiredDemonLordLevel <= 2 ? 2 : 1;
-        } else if (progressRatio >= 0.50) {
+            recruitCount = 3;
+        } else if (progressRatio >= 0.75) {
+            recruitCount = 2;
+        } else if (progressRatio >= 0.25) {
+            recruitCount = 1;
+        } else if (progressRatio >= 0.10 && rollReplayRecruitPercent(rewardSeed, village.id, 1) <= 85) {
+            recruitCount = 1;
+        } else if (progressRatio > 0.0 && rollReplayRecruitPercent(rewardSeed, village.id, 2) <= 50) {
             recruitCount = 1;
         }
-        if (annihilated && recruitCount > 1) {
-            recruitCount = 1;
+        if (!annihilated
+                && recruitCount == 1
+                && progressRatio >= 0.50
+                && rollReplayRecruitPercent(rewardSeed, village.id, 3) <= 60) {
+            recruitCount = 2;
+        }
+        if (!annihilated
+                && recruitCount == 2
+                && progressRatio >= 0.90
+                && rollReplayRecruitPercent(rewardSeed, village.id, 4) <= 45) {
+            recruitCount = 3;
+        }
+        if (annihilated && progressRatio > 0.0) {
+            recruitCount = Math.max(1, Math.min(recruitCount, 2));
         }
 
         for (int i = 0; i < recruitCount; i++) {
@@ -254,6 +272,18 @@ final class GameState {
             recruits.add(recruitMonster(recruit.id));
         }
         return recruits;
+    }
+
+    private int rollReplayRecruitPercent(long seed, String villageId, int salt) {
+        long value = seed
+                ^ ((long) villageId.hashCode() << 32)
+                ^ (salt * 0x9E3779B97F4A7C15L);
+        value ^= (value >>> 33);
+        value *= 0xff51afd7ed558ccdL;
+        value ^= (value >>> 33);
+        value *= 0xc4ceb9fe1a85ec53L;
+        value ^= (value >>> 33);
+        return 1 + (int) Math.floorMod(value, 100);
     }
 
     OwnedMonster recruitMonster(String monsterId) {
